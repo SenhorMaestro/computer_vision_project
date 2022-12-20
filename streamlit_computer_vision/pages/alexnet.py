@@ -3,7 +3,6 @@ import torch
 import streamlit as st
 from PIL import Image
 import numpy as np
-# import cv2
 
 alexnet = models.alexnet(weights='IMAGENET1K_V1')
 
@@ -17,11 +16,9 @@ transform = transforms.Compose([            #[1]
  std=[0.229, 0.224, 0.225]                  #[7]
  )])
 
-# read labels if images
 with open('imagenet1000_clsidx_to_labels.txt') as f:
     labels = [line.strip() for line in f.readlines()]
 
-# Function to Read and Manupilate Images
 def load_image(img):
     im = Image.open(img)
     image = np.array(im)
@@ -30,7 +27,6 @@ def load_image(img):
 st.header("Классификация произвольного изображения на модели AlexNet")
 st.write("Загрузите картинку и получите результат классификации")
 
-# Uploading the File to the Page
 uploadFile = st.file_uploader(label="Выберите картинку", type=['jpg', 'png'])
 if uploadFile is not None:
     img, _ = load_image(uploadFile)
@@ -45,9 +41,6 @@ if uploadFile is not None:
     
     _, index = torch.max(out, 1) 
     percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
-    # print(labels[index[0]].split("'")[1], percentage[index[0]].item())
-
-    # print(f'type(labels[index[0]]): {type(labels[index[0]])}')
 
     st.title('Предсказание модели:')
     if round(percentage[index[0]].item())<50:
